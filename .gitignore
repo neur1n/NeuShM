@@ -1,0 +1,8 @@
+compile_commands.json
+
+.clangd/
+
+demo/*
+!demo/win/
+demo/win/*
+!demo/win/*.exe
