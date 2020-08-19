@@ -17,12 +17,12 @@ public:
   NRESULT Create();  // Create for writting.
 
   template<class T>
-  NRESULT Write(T *data, int count);
+  NRESULT Write(T *data, unsigned int bytes, unsigned int shift_bytes);
 
   NRESULT Open();  // Open for reading.
 
   template<class T>
-  NRESULT Read(T **data, int *count);
+  NRESULT Read(T **data, unsigned int bytes, unsigned int shift_bytes);
 private:
   NRESULT SetName(const std::string &name);
   NRESULT Release();
@@ -67,7 +67,7 @@ NRESULT POSIXShM::Create()
 }
 
 template<class T>
-NRESULT POSIXShM::Write(T *data, int count)
+NRESULT POSIXShM::Write(T *data, unsigned int bytes, unsigned int shift_bytes)
 {
   this->m_buf = mmap(NULL, this->m_size, PROT_WRITE, MAP_SHARED, this->m_mapping, 0);
 
@@ -78,9 +78,8 @@ NRESULT POSIXShM::Write(T *data, int count)
     return NEU_FAIL;
   }
 
-  memcpy((T*)this->m_buf, &count, sizeof(int));
-  memcpy(((T*)this->m_buf + sizeof(int)), data, (count * sizeof(T)));
-  munmap(this->m_buf, this->m_size);
+  memcpy(((T*)this->m_buf + shift_bytes), data, bytes);
+  // munmap(this->m_buf, this->m_size);
 
   return NEU_OK;
 }
@@ -99,7 +98,7 @@ NRESULT POSIXShM::Open()
 }
 
 template<class T>
-NRESULT POSIXShM::Read(T **data, int *count)
+NRESULT POSIXShM::Read(T **data, unsigned int bytes, unsigned int shift_bytes)
 {
   this->m_buf = mmap(NULL, this->m_size, PROT_READ, MAP_SHARED, this->m_mapping, 0);
 
@@ -110,12 +109,9 @@ NRESULT POSIXShM::Read(T **data, int *count)
     return NEU_FAIL;
   }
 
-  memcpy(count, (T*)this->m_buf, sizeof(int));
-
-  *data = new T[*count];
-  memcpy(*data, ((T*)this->m_buf + sizeof(*count)), ((*count) * sizeof(T)));
-
-  munmap(this->m_buf, this->m_size);
+  *data = new T[bytes/sizeof(T)];
+  memcpy(*data, ((T*)this->m_buf + shift_bytes), bytes);
+  // munmap(this->m_buf, this->m_size);
 
   return NEU_OK;
 }

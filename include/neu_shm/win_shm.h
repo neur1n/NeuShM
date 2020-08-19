@@ -70,7 +70,6 @@ NRESULT WinShM::Write(T *data, unsigned int bytes, unsigned int shift_bytes)
     return NEU_FAIL;
   }
 
-  // CopyMemory((T*)this->m_buf, &count, sizeof(count));
   CopyMemory(((T*)this->m_buf + shift_bytes), data, bytes);
   // UnmapViewOfFile(this->m_buf);
 
@@ -101,8 +100,6 @@ NRESULT WinShM::Read(T **data, unsigned int bytes, unsigned int shift_bytes)
     this->Release();
     return NEU_FAIL;
   }
-
-  // CopyMemory(count, (T*)this->m_buf, sizeof(int));
 
   *data = new T[bytes/sizeof(T)];
   CopyMemory(*data, ((T*)this->m_buf + shift_bytes), bytes);
