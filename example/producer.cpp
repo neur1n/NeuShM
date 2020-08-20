@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 #ifdef _WIN32
   NeuShM shm("Global\\NeuShM", BUF_SIZE);
 #elif __linux__
-  NeuShM shm("/NeuShM");
+  NeuShM shm("/NeuShM", BUF_SIZE);
 #endif
 
   NRESULT nr;

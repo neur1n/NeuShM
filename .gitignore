@@ -2,7 +2,12 @@ compile_commands.json
 
 .clangd/
 
+build/
+
 demo/*
+!demo/linux/
+demo/linux/*
+!demo/linux/*.elf
 !demo/win/
 demo/win/*
 !demo/win/*.exe

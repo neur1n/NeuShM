@@ -1,6 +1,7 @@
 #ifndef POSIX_SHM_H
 #define POSIX_SHM_H
 
+#include <cstring>
 #include <errno.h>
 #include <fcntl.h>  // shm_open macro arguments
 #include <sys/mman.h>  // shm_open, mmap, shm_unlink

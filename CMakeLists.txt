@@ -23,9 +23,15 @@ IF(MSVC)
 ENDIF(MSVC)
 
 IF(UNIX)
-  ADD_EXECUTABLE(producer src/producer.cpp)
-  TARGET_LINK_LIBRARIES(producer rt)
+  ADD_EXECUTABLE(producer.elf example/producer.cpp)
+  TARGET_LINK_LIBRARIES(producer.elf rt)
+  SET_TARGET_PROPERTIES(producer.elf PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/demo/linux
+  )
 
-  ADD_EXECUTABLE(consumer src/consumer.cpp)
-  TARGET_LINK_LIBRARIES(consumer rt)
+  ADD_EXECUTABLE(consumer.elf example/consumer.cpp)
+  TARGET_LINK_LIBRARIES(consumer.elf rt)
+  SET_TARGET_PROPERTIES(consumer.elf PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/demo/linux
+  )
 ENDIF(UNIX)
