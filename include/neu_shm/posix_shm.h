@@ -79,7 +79,7 @@ NRESULT POSIXShM::Write(T *data, unsigned int bytes, unsigned int shift_bytes)
     return NEU_FAIL;
   }
 
-  memcpy(((T*)this->m_buf + shift_bytes), data, bytes);
+  memcpy((T*)((char*)this->m_buf + shift_bytes), data, bytes);
   // munmap(this->m_buf, this->m_size);
 
   return NEU_OK;
@@ -111,7 +111,7 @@ NRESULT POSIXShM::Read(T **data, unsigned int bytes, unsigned int shift_bytes)
   }
 
   *data = new T[bytes/sizeof(T)];
-  memcpy(*data, ((T*)this->m_buf + shift_bytes), bytes);
+  memcpy(*data, (T*)((char*)this->m_buf + shift_bytes), bytes);
   // munmap(this->m_buf, this->m_size);
 
   return NEU_OK;

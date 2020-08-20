@@ -22,8 +22,8 @@ int main(int argc, char *argv[])
   NeuShM shm("/NeuShM", BUF_SIZE);
 #endif
 
-  int *d0 = 0;
-  int *d1 = 0;
+  float *d0 = 0;
+  char *d1 = 0;
   Outter *data = nullptr;
 
   NRESULT nr;
@@ -34,15 +34,16 @@ int main(int argc, char *argv[])
     return -1;
   }
 
-  nr = shm.Read<int>(&d0, sizeof(int), 0);
-  nr = shm.Read<int>(&d1, sizeof(int), sizeof(int));
-  nr = shm.Read<Outter>(&data, 2*sizeof(Outter), 2*sizeof(int));
-  if (NeuFail(nr))
-  {
-    return -1;
-  }
+  nr = shm.Read<float>(&d0, sizeof(float), 0);
+  if (NeuFail(nr)) { return -1; }
 
-  NeuInfo("d0: %d, d1: %d", *d0, *d1);
+  nr = shm.Read<char>(&d1, sizeof(char), sizeof(float));
+  if (NeuFail(nr)) { return -1; }
+
+  nr = shm.Read<Outter>(&data, 2*sizeof(Outter), sizeof(float)+sizeof(char));
+  if (NeuFail(nr)) { return -1; }
+
+  NeuInfo("d0: %f, d1: %d", *d0, *d1);
 
   for (int i = 0; i < 2; i++)
   {

@@ -16,8 +16,8 @@ typedef struct
 
 int main(int argc, char *argv[])
 {
-  int d0 = 12;
-  int d1 = 89;
+  float d0 = 12.0f;
+  char d1 = 89;
 
   Outter data[2];
   data[0].inner.x = 1;
@@ -41,13 +41,14 @@ int main(int argc, char *argv[])
     return -1;
   }
 
-  nr = shm.Write<int>(&d0, sizeof(int), 0);
-  nr = shm.Write<int>(&d1, sizeof(int), sizeof(int));
-  nr = shm.Write<Outter>(data, 2*sizeof(Outter), 2*sizeof(int));
-  if (NeuFail(nr))
-  {
-    return -1;
-  }
+  nr = shm.Write<float>(&d0, sizeof(float), 0);
+  if (NeuFail(nr)) { return -1; }
+
+  nr = shm.Write<char>(&d1, sizeof(char), sizeof(float));
+  if (NeuFail(nr)) { return -1; }
+
+  nr = shm.Write<Outter>(data, 2*sizeof(Outter), sizeof(float)+sizeof(char));
+  if (NeuFail(nr)) { return -1; }
 
   while (1)
   {
